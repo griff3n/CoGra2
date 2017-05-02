@@ -15,16 +15,26 @@ struct Object {
 
 	// Model matrix
 	mat4x4 model;
+	int n;
+};
+
+struct data
+{
+	std::vector<glm::vec3> vertices;
+	std::vector<glm::vec3> colors;
+	std::vector<GLushort> indices;
 };
 
 int main(int argc, char** argv);
 bool init();
-void initTriangle();
-void initQuad();
+void initNEck(int n);
+void initWurfel();
+Object initObjekt(data objektdata, Object obj);
+
 void render();
-void renderCircle();
-void renderTriangle();
-void renderQuad();
+void renderNEck();
+void renderWurfel();
+void renderObject(Object obj, GLint caunt);
 void resize(GLFWwindow* window, int width, int height);
 void keyboard(GLFWwindow* window, unsigned int codepoint);
 void release();
@@ -38,5 +48,7 @@ mat4x4 projection;
 float zNear = 0.1f;
 float zFar = 100.0f;
 
-Object triangle;
-Object quad;
+Object nEck;
+Object wurfel;
+
+bool isWurfel = false;

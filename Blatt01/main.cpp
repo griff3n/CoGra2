@@ -1,5 +1,8 @@
+#define _USE_MATH_DEFINES
+
 #include <iostream>
 #include <vector>
+#include <cmath>
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -72,7 +75,7 @@ int main(int argc, char** argv) {
 // Initialization. Should return true if everything is ok and false if something went wrong.
 bool init() {
 	// OpenGL stuff. Set "background" color and enable depth testing.
-	glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
+	glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
 
 	// Construct view matrix.
 	vec3 eye(0.0f, 0.0f, 4.0f);
@@ -87,75 +90,122 @@ bool init() {
 		cerr << program.log();
 		return false;
 	}
-
-	// Create objects.
-	initTriangle();
-	initQuad();
+	initNEck(360);
 	return true;
 }
 
-void initTriangle() {
-	// Construct triangle. These vectors can go out of scope after we have send all data to the graphics card.
-	const vector<vec3> vertices = { vec3(-1.0f, 1.0f, 0.0f), vec3(1.0f, -1.0f, 0.0f), vec3(1.0f, 1.0f, 0.0f) };
-	const vector<vec3> colors = { vec3(1.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f), vec3(0.0f, 0.0f, 1.0f) };
-	const vector<GLushort> indices = { 0, 1, 2 };
-
-	GLuint programId = program.getHandle();
-	GLuint pos;
-
-	// Step 0: Create vertex array object.
-	glGenVertexArrays(1, &triangle.vertexArrayObject);
-	glBindVertexArray(triangle.vertexArrayObject);
-
-	// Step 1: Create vertex buffer object for position attribute and bind it to the associated "shader attribute".
-	glGenBuffers(1, &triangle.positionBuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, triangle.positionBuffer);
-	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(vec3), vertices.data(), GL_STATIC_DRAW);
-
-	// Bind it to position.
-	pos = glGetAttribLocation(programId, "position");
-	glEnableVertexAttribArray(pos);
-	glVertexAttribPointer(pos, 3, GL_FLOAT, GL_FALSE, 0, 0);
-
-	// Step 2: Create vertex buffer object for color attribute and bind it to...
-	glGenBuffers(1, &triangle.colorBuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, triangle.colorBuffer);
-	glBufferData(GL_ARRAY_BUFFER, colors.size() * sizeof(vec3), colors.data(), GL_STATIC_DRAW);
-
-	// Bind it to color.
-	pos = glGetAttribLocation(programId, "color");
-	glEnableVertexAttribArray(pos);
-	glVertexAttribPointer(pos, 3, GL_FLOAT, GL_FALSE, 0, 0);
-
-	// Step 3: Create vertex buffer object for indices. No binding needed here.
-	glGenBuffers(1, &triangle.indexBuffer);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, triangle.indexBuffer);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLushort), indices.data(), GL_STATIC_DRAW);
-
-	// Unbind vertex array object (back to default).
-	glBindVertexArray(0);
-
-	// Modify model matrix.
-	triangle.model = translate(mat4(1.0f), vec3(-1.25f, 0.0f, 0.0f));
+void initNEck(int n) {
+	data dataNEck;
+	dataNEck.vertices.push_back(vec3(0.0f, 0.0f, 0.0f));
+	dataNEck.colors.push_back(vec3(1.0f, 0.0f, 0.0f));
+	for (int i = 0; i < n; i++) {
+		// Umlaufenden Winkel berechnen
+		double winkel = double(i) / double(n) * 2.0f * M_PI;
+		// Kreisfunktionen Sinus und Cosinus verwenden
+		double x = sin(winkel);
+		double y = cos(winkel);
+		// Punkt setzen
+		dataNEck.vertices.push_back(vec3(x, y, 0.0f));
+		dataNEck.colors.push_back(vec3(1.0f, 0.0f, 0.0f));
+	}
+	for (int i = 1; i < n; i++) {
+		dataNEck.indices.push_back(0);
+		dataNEck.indices.push_back(i);
+		dataNEck.indices.push_back(i +1);
+	}
+	dataNEck.indices.push_back(0);
+	dataNEck.indices.push_back(n);
+	dataNEck.indices.push_back(1);
+	nEck.n = n;
+	nEck = initObjekt(dataNEck, nEck);
 }
 
-void initQuad() {
-	// Construct triangle. These vectors can go out of scope after we have send all data to the graphics card.
-	const vector<vec3> vertices = { { -1.0f, 1.0f, 0.0f }, { -1.0, -1.0, 0.0 }, { 1.0f, -1.0f, 0.0f }, { 1.0f, 1.0f, 0.0f } };
-	const vector<vec3> colors = { { 1.0f, 0.0f, 0.0f }, { 0.0f, 1.0, 1.0f }, { 0.0f, 1.0f, 0.0f }, { 0.0f, 0.0f, 1.0f } };
-	const vector<GLushort> indices = { 0, 1, 2, 0, 2, 3 };
+void initWurfel() {
+	data dataWurfel;
+	dataWurfel.vertices.push_back(vec3(-0.5f, -0.5f, 0.5f));
+	dataWurfel.vertices.push_back(vec3(0.5f, -0.5f, 0.5f));
+	dataWurfel.vertices.push_back(vec3(0.5f, 0.5f, 0.5f));
+	dataWurfel.vertices.push_back(vec3(-0.5f, 0.5f, 0.5f));
+	
+	dataWurfel.colors.push_back(vec3(1.0f, 1.0f, 1.0f));
+	dataWurfel.colors.push_back(vec3(1.0f, 1.0f, 1.0f));
+	dataWurfel.colors.push_back(vec3(1.0f, 1.0f, 1.0f));
+	dataWurfel.colors.push_back(vec3(1.0f, 1.0f, 1.0f));
 
+	dataWurfel.vertices.push_back(vec3(0.5f, -0.5f, -0.5f));
+	dataWurfel.vertices.push_back(vec3(-0.5f, -0.5f, -0.5f));
+	dataWurfel.vertices.push_back(vec3(-0.5f, 0.5f, -0.5f));
+	dataWurfel.vertices.push_back(vec3(0.5f, 0.5f, -0.5f));
+
+	dataWurfel.colors.push_back(vec3(1.0f, 1.0f, 0.0f));
+	dataWurfel.colors.push_back(vec3(1.0f, 1.0f, 0.0f));
+	dataWurfel.colors.push_back(vec3(1.0f, 1.0f, 0.0f));
+	dataWurfel.colors.push_back(vec3(1.0f, 1.0f, 0.0f));
+
+	dataWurfel.vertices.push_back(vec3(-0.5f, -0.5f, -0.5f));
+	dataWurfel.vertices.push_back(vec3(-0.5f, -0.5f, 0.5f));
+	dataWurfel.vertices.push_back(vec3(-0.5f, 0.5f, 0.5f));
+	dataWurfel.vertices.push_back(vec3(-0.5f, 0.5f, -0.5f));
+
+	dataWurfel.colors.push_back(vec3(1.0f, 0.0f, 1.0f));
+	dataWurfel.colors.push_back(vec3(1.0f, 0.0f, 1.0f));
+	dataWurfel.colors.push_back(vec3(1.0f, 0.0f, 1.0f));
+	dataWurfel.colors.push_back(vec3(1.0f, 0.0f, 1.0f));
+	
+	dataWurfel.vertices.push_back(vec3(0.5f, -0.5f, 0.5f));
+	dataWurfel.vertices.push_back(vec3(0.5f, -0.5f, -0.5f));
+	dataWurfel.vertices.push_back(vec3(0.5f, 0.5f, -0.5f));
+	dataWurfel.vertices.push_back(vec3(0.5f, 0.5f, 0.5f));
+
+	dataWurfel.colors.push_back(vec3(1.0f, 0.0f, 0.0f));
+	dataWurfel.colors.push_back(vec3(1.0f, 0.0f, 0.0f));
+	dataWurfel.colors.push_back(vec3(1.0f, 0.0f, 0.0f));
+	dataWurfel.colors.push_back(vec3(1.0f, 0.0f, 0.0f));
+
+	dataWurfel.vertices.push_back(vec3(-0.5f, 0.5f, 0.5f));
+	dataWurfel.vertices.push_back(vec3(0.5f, 0.5f, 0.5f));
+	dataWurfel.vertices.push_back(vec3(0.5f, 0.5f, -0.5f));
+	dataWurfel.vertices.push_back(vec3(-0.5f, 0.5f, -0.5f));
+
+	dataWurfel.colors.push_back(vec3(0.0f, 1.0f, 0.0f));
+	dataWurfel.colors.push_back(vec3(0.0f, 1.0f, 0.0f));
+	dataWurfel.colors.push_back(vec3(0.0f, 1.0f, 0.0f));
+	dataWurfel.colors.push_back(vec3(0.0f, 1.0f, 0.0f));
+
+	dataWurfel.vertices.push_back(vec3(0.5f, -0.5f, -0.5f));
+	dataWurfel.vertices.push_back(vec3(0.5f, -0.5f, 0.5f));
+	dataWurfel.vertices.push_back(vec3(-0.5f, -0.5f, 0.5f));
+	dataWurfel.vertices.push_back(vec3(-0.5f, -0.5f, -0.5f));
+
+	dataWurfel.colors.push_back(vec3(0.0f, 1.0f, 1.0f));
+	dataWurfel.colors.push_back(vec3(0.0f, 1.0f, 1.0f));
+	dataWurfel.colors.push_back(vec3(0.0f, 1.0f, 1.0f));
+	dataWurfel.colors.push_back(vec3(0.0f, 1.0f, 1.0f));
+	for (int i = 0; i < 6; i++) {
+		dataWurfel.indices.push_back(i * 4);
+		dataWurfel.indices.push_back(i * 4 + 1);
+		dataWurfel.indices.push_back(i * 4 + 2);
+		dataWurfel.indices.push_back(i * 4);
+		dataWurfel.indices.push_back(i * 4 + 2);
+		dataWurfel.indices.push_back(i * 4 + 3);
+	}
+	wurfel.n = 36;
+	
+	wurfel = initObjekt(dataWurfel, wurfel);
+}
+
+Object initObjekt(data objektdata, Object obj) {
 	GLuint programId = program.getHandle();
 	GLuint pos;
 
 	// Step 0: Create vertex array object.
-	glGenVertexArrays(1, &quad.vertexArrayObject);
-	glBindVertexArray(quad.vertexArrayObject);
+	glGenVertexArrays(1, &obj.vertexArrayObject);
+	glBindVertexArray(obj.vertexArrayObject);
 
 	// Step 1: Create vertex buffer object for position attribute and bind it to the associated "shader attribute".
-	glGenBuffers(1, &quad.positionBuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, quad.positionBuffer);
-	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(vec3), vertices.data(), GL_STATIC_DRAW);
+	glGenBuffers(1, &obj.positionBuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, obj.positionBuffer);
+	glBufferData(GL_ARRAY_BUFFER, objektdata.vertices.size() * sizeof(vec3), objektdata.vertices.data(), GL_STATIC_DRAW);
 
 	// Bind it to position.
 	pos = glGetAttribLocation(programId, "position");
@@ -163,9 +213,9 @@ void initQuad() {
 	glVertexAttribPointer(pos, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
 	// Step 2: Create vertex buffer object for color attribute and bind it to...
-	glGenBuffers(1, &quad.colorBuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, quad.colorBuffer);
-	glBufferData(GL_ARRAY_BUFFER, colors.size() * sizeof(vec3), colors.data(), GL_STATIC_DRAW);
+	glGenBuffers(1, &obj.colorBuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, obj.colorBuffer);
+	glBufferData(GL_ARRAY_BUFFER, objektdata.colors.size() * sizeof(vec3), objektdata.colors.data(), GL_STATIC_DRAW);
 
 	// Bind it to color.
 	pos = glGetAttribLocation(programId, "color");
@@ -173,53 +223,50 @@ void initQuad() {
 	glVertexAttribPointer(pos, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
 	// Step 3: Create vertex buffer object for indices. No binding needed here.
-	glGenBuffers(1, &quad.indexBuffer);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, quad.indexBuffer);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLushort), indices.data(), GL_STATIC_DRAW);
+	glGenBuffers(1, &obj.indexBuffer);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, obj.indexBuffer);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, objektdata.indices.size() * sizeof(GLushort), objektdata.indices.data(), GL_STATIC_DRAW);
 
 	// Unbind vertex array object (back to default).
 	glBindVertexArray(0);
 
 	// Modify model matrix.
-	quad.model = translate(mat4(1.0f), vec3(1.25f, 0.0f, 0.0f));
+	obj.model = translate(mat4(1.0f), vec3(0.0f, 0.0f, 0.0f));
+	return obj;
 }
 
 // Rendering.
 void render() {
 	glClear(GL_COLOR_BUFFER_BIT);
-	renderTriangle();
-	renderQuad();
+	if (isWurfel) {
+		renderWurfel();
+	}
+	else {
+		renderNEck();
+	}
 }
 
-void renderCircle() {
+void renderNEck() {
+	renderObject(nEck, nEck.n * 3);
 }
 
-void renderTriangle() {
+void renderWurfel() {
+	glClear(GL_COLOR_BUFFER_BIT);
+	renderObject(wurfel, wurfel.n);
+}
+
+void renderObject(Object obj, GLint caunt) {
 	// Erstelle model view projection matrix
-	mat4x4 mvp = projection * view * triangle.model;
+	mat4x4 mvp = projection * view * obj.model;
 
 	// Bind the shader program and set uniform(s).
 	program.use();
 	program.setUniform("mvp", mvp);
 
 	// Bind vertex array object so we can render the 1 triangle.
-	glBindVertexArray(triangle.vertexArrayObject);
-	glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_SHORT, 0);
-	glBindVertexArray(0);
-}
-
-void renderQuad() {
-	// Erstelle model view projection matrix
-	mat4x4 mvp = projection * view * quad.model;
-
-	// Bind the shader program and set uniform(s).
-	program.use();
-	program.setUniform("mvp", mvp);
-	
-	// Bind vertex array object so we can render the 1 triangle.
-	glBindVertexArray(quad.vertexArrayObject);
-	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, 0);
-	glBindVertexArray(0);
+	glBindVertexArray(obj.vertexArrayObject);
+	glDrawElements(GL_TRIANGLES, caunt, GL_UNSIGNED_SHORT, 0);
+	//glBindVertexArray(0);
 }
 
 // Resize callback.
@@ -233,16 +280,49 @@ void resize(GLFWwindow* window, int width, int height) {
 
 // Callback for char input.
 void keyboard(GLFWwindow* window, unsigned int codepoint) {
+	int n = nEck.n;
 	switch (codepoint) {
 	case '+':
+		if (n < 30) {
+			initNEck(n + 1);
+			render();
+		}
 		break;
 	case '-':
+		if (n > 3) {
+			initNEck(n - 1);
+			render();
+		}
 		break;
 	case 'x':
+		//wurfel.model = translate(wurfel.model, vec3(0.0f, 0.0f, -8.0f));
+		wurfel.model = rotate(wurfel.model, 45.0f, vec3(0.0f, 1.0f, 0.0f));
+		//wurfel.model = scale(wurfel.model, vec3(0.5f));
+		renderWurfel();
+		cout << "x";
 		break;
 	case 'y':
+		wurfel.model = rotate(wurfel.model, 45.0f, vec3(1.0f, 0.0f, 0.0f));
+		renderWurfel();
+		cout << "y";
 		break;
 	case 'z':
+		wurfel.model = rotate(wurfel.model, 45.0f, vec3(0.0f, 0.0f, 1.0f));
+		renderWurfel();
+		cout << "z";
+		break;
+	case '1':
+		initNEck(360);
+		render();
+		break;
+	case '2':
+		initNEck(4);
+		render();
+		break;
+	case '3':
+		isWurfel = true;
+		initWurfel();
+		renderWurfel();
 		break;
 	}
 }
@@ -250,8 +330,7 @@ void keyboard(GLFWwindow* window, unsigned int codepoint) {
 // Release resources on termination.
 void release() {
 	// Shader program will be released upon program termination.
-	releaseObject(triangle);
-	releaseObject(quad);
+	releaseObject(nEck);
 }
 
 // Release object resources.

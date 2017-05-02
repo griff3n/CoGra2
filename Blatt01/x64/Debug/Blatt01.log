@@ -1,15 +1,12 @@
-﻿Der Buildvorgang wurde am 28.04.2017 04:34:53 gestartet.
+﻿Der Buildvorgang wurde am 02.05.2017 07:51:52 gestartet.
      1>Projekt "C:\Users\admin\Documents\Visual Studio 2013\Projects\CoGra2\Blatt01\Blatt01.vcxproj" auf Knoten "2", Build Ziel(e).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\CL.exe /c /Zi /nologo /W3 /WX- /sdl /Od /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"x64\Debug\\" /Fd"x64\Debug\vc120.pdb" /Gd /TP /errorReport:prompt GLSLProgram.cpp main.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\CL.exe /c /Zi /nologo /W3 /WX- /sdl /Od /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"x64\Debug\\" /Fd"x64\Debug\vc120.pdb" /Gd /TP /errorReport:prompt main.cpp
          main.cpp
-         Code wird generiert...
-         Kompilieren...
-         GLSLProgram.cpp
-         Code wird generiert...
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\admin\Documents\Visual Studio 2013\Projects\CoGra2\Blatt01\x64\Debug\Blatt01.exe" /INCREMENTAL /NOLOGO opengl32.lib glew32.lib glfw3.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\admin\Documents\Visual Studio 2013\Projects\CoGra2\Blatt01\x64\Debug\Blatt01.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\admin\Documents\Visual Studio 2013\Projects\CoGra2\Blatt01\x64\Debug\Blatt01.lib" /MACHINE:X64 x64\Debug\GLSLProgram.obj
          x64\Debug\main.obj
+     1>LINK : warning LNK4098: Standardbibliothek "MSVCRT" steht in Konflikt mit anderen Bibliotheken; /NODEFAULTLIB:Bibliothek verwenden.
          Blatt01.vcxproj -> C:\Users\admin\Documents\Visual Studio 2013\Projects\CoGra2\Blatt01\x64\Debug\Blatt01.exe
        PostBuildEvent:
          xcopy /y "C:\Users\admin\Documents\Visual Studio 2013\Projects\CoGra2\Blatt01\libs\glew-1.13.0\bin\Release\x64\glew32.dll" "C:\Users\admin\Documents\Visual Studio 2013\Projects\CoGra2\Blatt01\x64\Debug\"
@@ -20,4 +17,4 @@
 
 Build erfolgreich.
 
-Verstrichene Zeit 00:00:03.55
+Verstrichene Zeit 00:00:01.87
