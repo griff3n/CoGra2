@@ -32,5 +32,8 @@
     <ClInclude Include="Sphere.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
+    <ClInclude Include="Line.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

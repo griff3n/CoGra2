@@ -135,6 +135,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GLSLProgram.h" />
+    <ClInclude Include="Line.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="Sphere.h" />
   </ItemGroup>
