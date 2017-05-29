@@ -27,6 +27,12 @@
     <ClCompile Include="Sphere.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="SpaceObject.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="DrawObject.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GLSLProgram.h">
@@ -39,6 +45,15 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Line.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="SpaceObject.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectData.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="DrawObject.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>
