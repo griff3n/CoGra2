@@ -4,20 +4,16 @@
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 
-namespace cg
-{
-	struct Object
-	{
+namespace cg {
+	struct Object {
 		GLuint vao;
 		GLuint positionBuffer;
 		GLuint colorBuffer;
 		GLuint normalBuffer;
 		GLuint indexBuffer;
-
 		GLuint indexCount;
 
-		~Object()
-		{
+		~Object() {
 			glDeleteVertexArrays(1, &vao);
 			glDeleteBuffers(1, &indexBuffer);
 			glDeleteBuffers(1, &normalBuffer);

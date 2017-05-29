@@ -14,7 +14,6 @@
 #define WINDOW_WIDTH 640
 #define WINDOW_HEIGHT 480
 
-
 //change
 cg::Sphere* sun = nullptr;
 float sunSize = 0.8;
@@ -105,7 +104,7 @@ float moon4Angle = 0;
 float moon4AngleFactor = 0.05f;
 float moon4RotationAxisX = 0;
 float moon4RotationAxisY = 0;
-float moon4RotationAxisZ = 25.19f;
+float moon4RotationAxisZ = 0;
 float moon4RotationAxisXFactor = 0;
 float moon4RotationAxisYFactor = 1.0f;
 float moon4RotationAxisZFactor = 0;
@@ -191,8 +190,7 @@ cg::Line* createPlanetLine(float angleX, float angleY, float angleZ, float size,
 Release resources on termination.
 */
 //change
-void release()
-{
+void release() {
 	delete sun;
 	delete earth;
 	delete mars;
@@ -211,8 +209,7 @@ void release()
 /*
  Initialization. Should return true if everything is ok and false if something went wrong.
  */
-bool init()
-{
+bool init() {
 	// OpenGL stuff. Set "background" color and enable depth testing.
 	glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 	glEnable(GL_DEPTH_TEST);
@@ -227,13 +224,11 @@ bool init()
 	glm::vec3 eye(0.0f, 0.0f, 10.0f);
 	glm::vec3 center(0.0f, 0.0f, 0.0f);
 	glm::vec3 up(0.0f, 2.0f, 0.0f);
-
 	view = glm::lookAt(eye, center, up);
 
 	// Create pyramid object.
 	//change
-	try
-	{
+	try {
 		sunLine = createPlanetLine(glm::radians(sunRotationAxisX), glm::radians(sunRotationAxisY), glm::radians(sunRotationAxisZ), sunSize, glm::vec3(0, 0, 0), sunColor);
 		earthLine = createPlanetLine(glm::radians(earthRotationAxisX), glm::radians(earthRotationAxisY), glm::radians(earthRotationAxisZ), earthSize, earthPos, earthColor);
 		marsLine = createPlanetLine(glm::radians(marsRotationAxisX), glm::radians(marsRotationAxisY), glm::radians(marsRotationAxisZ), marsSize, marsPos, marsColor);
@@ -248,9 +243,7 @@ bool init()
 		moon5 = createPlanet(glm::radians(moon5RotationAxisX), glm::radians(moon5RotationAxisY), glm::radians(moon5RotationAxisZ), moon5Size, marsPos + moon5Pos, moon5Color);
 		moon6 = createPlanet(glm::radians(moon6RotationAxisX), glm::radians(moon6RotationAxisY), glm::radians(moon6RotationAxisZ), moon6Size, marsPos + moon6Pos, moon6Color);
 		moon7 = createPlanet(glm::radians(moon7RotationAxisX), glm::radians(moon7RotationAxisY), glm::radians(moon7RotationAxisZ), moon7Size, marsPos + moon7Pos, moon7Color);
-	}
-	catch (const std::exception& e)
-	{
+	} catch (const std::exception& e) {
 		release();
 		std::cerr << e.what() << std::endl;
 		return false;
@@ -259,7 +252,6 @@ bool init()
 	//change
 	std::cout << "Use x, y, z to rotate the sphere" << std::endl;
 	std::cout << "Use + and - to scale the sphere" << std::endl;
-
 	return true;
 }
 
@@ -267,8 +259,7 @@ bool init()
  Rendering.
  */
 //change
-void render()
-{
+void render() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	
 	earth->render(view, projection);
@@ -440,14 +431,12 @@ void render()
 
 	sunLine->model = glm::rotate(sunLine->model, glm::radians(sunRotationAxisY), glm::vec3(0.0f, 1.0f, 0.0f));
 	sunLine->model = glm::rotate(sunLine->model, glm::radians(sunRotationAxisZ), glm::vec3(0.0f, 0.0f, 1.0f));
-
 }
 
 /*
  Resize callback.
  */
-void resize(GLFWwindow* window, int width, int height)
-{
+void resize(GLFWwindow* window, int width, int height) {
 	height = height < 1 ? 1 : height;
 	glViewport(0, 0, width, height);
 
@@ -459,10 +448,8 @@ void resize(GLFWwindow* window, int width, int height)
  Callback for char input.
  */
 //change
-void keyboard(GLFWwindow* window, unsigned int codepoint)
-{
-	switch (codepoint)
-	{
+void keyboard(GLFWwindow* window, unsigned int codepoint) {
+	switch (codepoint) {
 	case '+':
 		sun->model = glm::scale(sun->model, glm::vec3(1.2f));
 		break;
@@ -490,13 +477,13 @@ void keyboard(GLFWwindow* window, unsigned int codepoint)
 	}
 }
 
-int main(int argc, char** argv)
-{
+int main(int argc, char** argv) {
 	GLFWwindow* window;
 
 	// Initialize glfw library (window toolkit).
-	if (!glfwInit())
+	if (!glfwInit()) {
 		return -1;
+	}
 
 	// Create a window and opengl context (version 3.3 core profile).
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -507,9 +494,7 @@ int main(int argc, char** argv)
 	// glfwWindowHint(GLFW_SAMPLES, 8);
 	
 	window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Sphere example", nullptr, nullptr);
-	
-	if (!window)
-	{
+	if (!window) {
 		glfwTerminate();
 		return -2;
 	}
@@ -521,8 +506,7 @@ int main(int argc, char** argv)
 	glewExperimental = GL_TRUE;
 	GLenum result = glewInit();
 
-	if (result != GLEW_OK)
-	{
+	if (result != GLEW_OK) {
 		glfwTerminate();
 		return -3;
 	}
@@ -531,11 +515,9 @@ int main(int argc, char** argv)
 	glfwSetWindowSizeCallback(window, resize);
 	glfwSetCharCallback(window, keyboard);
 
-	if (!init())
-	{
+	if (!init()) {
 		release();
 		glfwTerminate();
-
 		return -4;
 	}
 
@@ -543,10 +525,8 @@ int main(int argc, char** argv)
 	resize(window, WINDOW_WIDTH, WINDOW_HEIGHT);
 
 	// Loop until the user closes the window.
-	while (!glfwWindowShouldClose(window))
-	{
+	while (!glfwWindowShouldClose(window)) {
 		render();
-
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
@@ -554,6 +534,5 @@ int main(int argc, char** argv)
 	// Clean up everything on termination.
 	release();
 	glfwTerminate();
-
 	return 0;
 }

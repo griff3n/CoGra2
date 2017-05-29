@@ -11,12 +11,9 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-namespace cg
-{
-	namespace GLSLShader
-	{
-		enum GLSLShaderType
-		{
+namespace cg {
+	namespace GLSLShader {
+		enum GLSLShaderType {
 			VERTEX = GL_VERTEX_SHADER,
 			FRAGMENT = GL_FRAGMENT_SHADER,
 			GEOMETRY = GL_GEOMETRY_SHADER,
@@ -28,8 +25,7 @@ namespace cg
 	/*
 	 Based on https://github.com/daw42/glslcookbook.
 	*/
-	class GLSLProgram
-	{
+	class GLSLProgram {
 	private:
 		GLuint handle;
 		bool linked;
