@@ -2,3 +2,7 @@
 /Debug/
 /Blatt*/Debug/
 /Blatt*/x64/Debug/
+/Release/
+/Blatt*/Release/
+/Blatt*/x64/Release/
+/Blatt*/*.opensdf
