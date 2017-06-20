@@ -11,23 +11,53 @@
 #include "Sphere.h"
 #include "Line.h"
 
-#define WINDOW_WIDTH 640
-#define WINDOW_HEIGHT 480
+using namespace cg;
+using namespace glm;
+
+#define SCHWARZ		glm::vec3(0.0f, 0.0f, 0.0f)
+
+#define	DUNKELBLAU	glm::vec3(0.0f, 0.0f, 0.5f)
+#define	GRUEN		glm::vec3(0.0f, 0.5f, 0.0f)
+#define	TEAL		glm::vec3(0.0f, 0.5f, 0.5f)
+#define	BRAUN		glm::vec3(0.5f, 0.0f, 0.0f)
+#define	PURPUR		glm::vec3(0.5f, 0.0f, 0.5f)
+#define	OLIVE		glm::vec3(0.5f, 0.5f, 0.0f)
+#define	GRAU		glm::vec3(0.5f, 0.5f, 0.5f)
+
+#define SILBER		glm::vec3(0.75f, 0.75f, 0.75f)
+
+#define BLAU		glm::vec3(0.0f, 0.0f, 1.0f)
+#define HELLGRUEN	glm::vec3(0.0f, 1.0f, 0.0f)
+#define CYAN		glm::vec3(0.0f, 1.0f, 1.0f)
+#define ROT			glm::vec3(1.0f, 0.0f, 0.0f)
+#define MAGENTA		glm::vec3(1.0f, 0.0f, 1.0f)
+#define GELB		glm::vec3(1.0f, 1.0f, 0.0f)
+#define WEISS		glm::vec3(1.0f, 1.0f, 1.0f)
+
+#define WINDOW_WIDTH 1200
+#define WINDOW_HEIGHT 900
+
+void transformObjs();
+
+const GLfloat sunRotationSpeed = 0.1f;
+const GLfloat earthRadius = 4.0f;
+const GLfloat moonRadius = 2.0f;
+const GLfloat marsRadius = -5.0f;
 
 //change
 cg::Sphere* sun = nullptr;
-float sunSize = 0.8;
+float sunSize = 0.8f;
 float sunRotationAxisX = 0;
 float sunRotationAxisY = 0;
 float sunRotationAxisZ = 0;
 float sunRotationAxisXFactor = 0;
 float sunRotationAxisYFactor = 1.0f;
 float sunRotationAxisZFactor = 0;
-glm::vec3 sunColor = glm::vec3(1.0f, 1.0f, 0.0f);
+glm::vec3 sunColor = GELB;
 
 //change
 cg::Sphere* earth = nullptr;
-float earthSize = 0.4;
+float earthSize = 0.4f;
 float earthAngle = 0;
 float earthAngleFactor = 0.01f;
 float earthRotationAxisX = 0;
@@ -38,26 +68,26 @@ float earthRotationAxisYFactor = 1.0f;
 float earthRotationAxisZFactor = 0;
 float earthPosX = 3;
 glm::vec3 earthPos = glm::vec3(earthPosX, 0, 0);
-glm::vec3 earthColor = glm::vec3(0.0f, 0.0f, 1.0f);
+glm::vec3 earthColor = BLAU;
 
 //change
 cg::Sphere* mars = nullptr;
-float marsSize = 0.3;
+float marsSize = 0.3f;
 float marsAngle = 0;
 float marsAngleFactor = 0.01f;
 float marsRotationAxisX = 0;
 float marsRotationAxisY = 0;
-float marsRotationAxisZ = 25.19f;
+float marsRotationAxisZ = 45.0f;
 float marsRotationAxisXFactor = 0;
 float marsRotationAxisYFactor = 1.0f;
 float marsRotationAxisZFactor = 0;
 float marsPosX = -5;
 glm::vec3 marsPos = glm::vec3(marsPosX, 0, 0);
-glm::vec3 marsColor = glm::vec3(1.0f, 0.0f, 0.0f);
+glm::vec3 marsColor = ROT;
 
 //change
 cg::Sphere* moon1 = nullptr;
-float moon1Size = 0.1;
+float moon1Size = 0.1f;
 float moon1Angle = 0;
 float moon1AngleFactor = 0.05f;
 float moon1RotationAxisX = 0;
@@ -67,11 +97,11 @@ float moon1RotationAxisXFactor = 0;
 float moon1RotationAxisYFactor = 1.0f;
 float moon1RotationAxisZFactor = 0;
 glm::vec3 moon1Pos = glm::vec3(1, 0, 0);
-glm::vec3 moon1Color = glm::vec3(1.0f, 1.0f, 1.0f);
+glm::vec3 moon1Color = WEISS;
 
 //change
 cg::Sphere* moon2 = nullptr;
-float moon2Size = 0.1;
+float moon2Size = 0.1f;
 float moon2Angle = 0;
 float moon2AngleFactor = 0.05f;
 float moon2RotationAxisX = 0;
@@ -81,11 +111,11 @@ float moon2RotationAxisXFactor = 0;
 float moon2RotationAxisYFactor = 1.0f;
 float moon2RotationAxisZFactor = 0;
 glm::vec3 moon2Pos = glm::vec3(-1, 0, 0);
-glm::vec3 moon2Color = glm::vec3(1.0f, 1.0f, 1.0f);
+glm::vec3 moon2Color = HELLGRUEN;
 
 //change
 cg::Sphere* moon3 = nullptr;
-float moon3Size = 0.1;
+float moon3Size = 0.1f;
 float moon3Angle = 0;
 float moon3AngleFactor = 0.05f;
 float moon3RotationAxisX = 0;
@@ -95,63 +125,63 @@ float moon3RotationAxisXFactor = 0;
 float moon3RotationAxisYFactor = 1.0f;
 float moon3RotationAxisZFactor = 0;
 glm::vec3 moon3Pos = glm::vec3(0, 0, 1);
-glm::vec3 moon3Color = glm::vec3(1.0f, 1.0f, 1.0f);
+glm::vec3 moon3Color = CYAN;
 
 //change
 cg::Sphere* moon4 = nullptr;
-float moon4Size = 0.1;
+float moon4Size = 0.1f;
 float moon4Angle = 0;
 float moon4AngleFactor = 0.05f;
 float moon4RotationAxisX = 0;
 float moon4RotationAxisY = 0;
-float moon4RotationAxisZ = 0;
+float moon4RotationAxisZ = 25.19f;
 float moon4RotationAxisXFactor = 0;
 float moon4RotationAxisYFactor = 1.0f;
 float moon4RotationAxisZFactor = 0;
 glm::vec3 moon4Pos = glm::vec3(1, 0, 0);
-glm::vec3 moon4Color = glm::vec3(1.0f, 1.0f, 1.0f);
+glm::vec3 moon4Color = MAGENTA;
 
 //change
 cg::Sphere* moon5 = nullptr;
-float moon5Size = 0.1;
+float moon5Size = 0.1f;
 float moon5Angle = 0;
 float moon5AngleFactor = 0.05f;
 float moon5RotationAxisX = 0;
 float moon5RotationAxisY = 0;
-float moon5RotationAxisZ = 0;
+float moon5RotationAxisZ = 25.19f;
 float moon5RotationAxisXFactor = 0;
 float moon5RotationAxisYFactor = 1.0f;
 float moon5RotationAxisZFactor = 0;
 glm::vec3 moon5Pos = glm::vec3(-1, 0, 0);
-glm::vec3 moon5Color = glm::vec3(1.0f, 1.0f, 1.0f);
+glm::vec3 moon5Color = SILBER;
 
 //change
 cg::Sphere* moon6 = nullptr;
-float moon6Size = 0.1;
+float moon6Size = 0.1f;
 float moon6Angle = 0;
 float moon6AngleFactor = 0.05f;
 float moon6RotationAxisX = 0;
 float moon6RotationAxisY = 0;
-float moon6RotationAxisZ = 0;
+float moon6RotationAxisZ = 25.19f;
 float moon6RotationAxisXFactor = 0;
 float moon6RotationAxisYFactor = 1.0f;
 float moon6RotationAxisZFactor = 0;
 glm::vec3 moon6Pos = glm::vec3(0, 0, 1);
-glm::vec3 moon6Color = glm::vec3(1.0f, 1.0f, 1.0f);
+glm::vec3 moon6Color = BRAUN;
 
 //change
 cg::Sphere* moon7 = nullptr;
-float moon7Size = 0.1;
+float moon7Size = 0.1f;
 float moon7Angle = 0;
 float moon7AngleFactor = 0.05f;
 float moon7RotationAxisX = 0;
 float moon7RotationAxisY = 0;
-float moon7RotationAxisZ = 0;
+float moon7RotationAxisZ = 25.19f;
 float moon7RotationAxisXFactor = 0;
 float moon7RotationAxisYFactor = 1.0f;
 float moon7RotationAxisZFactor = 0;
 glm::vec3 moon7Pos = glm::vec3(0, 0, -1);
-glm::vec3 moon7Color = glm::vec3(1.0f, 1.0f, 1.0f);
+glm::vec3 moon7Color = SCHWARZ;
 
 //change
 cg::Line* sunLine = nullptr;
@@ -221,28 +251,80 @@ bool init() {
 	// Construct view matrix.
 	//change
 	//eye 0,0,10 up 0,1,0
-	glm::vec3 eye(0.0f, 0.0f, 10.0f);
+	glm::vec3 eye(0.0f, 0.0f, 15.0f);
 	glm::vec3 center(0.0f, 0.0f, 0.0f);
-	glm::vec3 up(0.0f, 2.0f, 0.0f);
+	glm::vec3 up(0.0f, 1.0f, 0.0f);
 	view = glm::lookAt(eye, center, up);
 
 	// Create pyramid object.
 	//change
 	try {
-		sunLine = createPlanetLine(glm::radians(sunRotationAxisX), glm::radians(sunRotationAxisY), glm::radians(sunRotationAxisZ), sunSize, glm::vec3(0, 0, 0), sunColor);
-		earthLine = createPlanetLine(glm::radians(earthRotationAxisX), glm::radians(earthRotationAxisY), glm::radians(earthRotationAxisZ), earthSize, earthPos, earthColor);
-		marsLine = createPlanetLine(glm::radians(marsRotationAxisX), glm::radians(marsRotationAxisY), glm::radians(marsRotationAxisZ), marsSize, marsPos, marsColor);
-		sun = createPlanet(glm::radians(sunRotationAxisX), glm::radians(sunRotationAxisY), glm::radians(sunRotationAxisZ), sunSize, glm::vec3(0, 0, 0), sunColor);
-		earth = createPlanet(glm::radians(earthRotationAxisX), glm::radians(earthRotationAxisY), glm::radians(earthRotationAxisZ), earthSize, earthPos, earthColor);
-		mars = createPlanet(glm::radians(marsRotationAxisX), glm::radians(marsRotationAxisY), glm::radians(marsRotationAxisZ), marsSize, marsPos, marsColor);
+		sunLine = new Line(GELB, 2.0f);
+		earthLine = new Line(BLAU, 2.0f);
+		marsLine = new Line(ROT, 2.0f);
+		sun = new Sphere(GELB);
+		earth = new Sphere(BLAU);
+		mars = new Sphere(ROT);
+		moon1 = new Sphere(WEISS);
+		moon2 = new Sphere(HELLGRUEN);
+		moon3 = new Sphere(CYAN);
+		moon4 = new Sphere(MAGENTA);
+		moon5 = new Sphere(SILBER);
+		moon6 = new Sphere(BRAUN);
+		moon7 = new Sphere(SCHWARZ);
+		
+		earthLine->model = translate(earthLine->model, vec3(earthRadius, 0.0f, 0.0f));
+		earthLine->model = scale(earthLine->model, vec3(0.5f));
+		earth->model = translate(earth->model, vec3(earthRadius, 0.0f, 0.0f));
+		earth->model = scale(earth->model, vec3(0.5f));
+		
+		moon1->model = translate(moon1->model, vec3(earthRadius, 0.0f, 0.0f));
+		moon1->model = rotate(moon1->model, radians(30.0f), vec3(0.0f, 1.0f, 0.0f));
+		moon1->model = translate(moon1->model, vec3(moonRadius, 0.0f, 0.0f));
+		moon1->model = scale(moon1->model, vec3(0.25f));
 
-		moon1 = createPlanet(glm::radians(moon1RotationAxisX), glm::radians(moon1RotationAxisY), glm::radians(moon1RotationAxisZ), moon1Size, earthPos + moon1Pos, moon1Color);
-		moon2 = createPlanet(glm::radians(moon2RotationAxisX), glm::radians(moon2RotationAxisY), glm::radians(moon2RotationAxisZ), moon2Size, earthPos + moon2Pos, moon2Color);
-		moon3 = createPlanet(glm::radians(moon3RotationAxisX), glm::radians(moon3RotationAxisY), glm::radians(moon3RotationAxisZ), moon3Size, earthPos + moon3Pos, moon3Color);
-		moon4 = createPlanet(glm::radians(moon4RotationAxisX), glm::radians(moon4RotationAxisY), glm::radians(moon4RotationAxisZ), moon4Size, marsPos + moon4Pos, moon4Color);
-		moon5 = createPlanet(glm::radians(moon5RotationAxisX), glm::radians(moon5RotationAxisY), glm::radians(moon5RotationAxisZ), moon5Size, marsPos + moon5Pos, moon5Color);
-		moon6 = createPlanet(glm::radians(moon6RotationAxisX), glm::radians(moon6RotationAxisY), glm::radians(moon6RotationAxisZ), moon6Size, marsPos + moon6Pos, moon6Color);
-		moon7 = createPlanet(glm::radians(moon7RotationAxisX), glm::radians(moon7RotationAxisY), glm::radians(moon7RotationAxisZ), moon7Size, marsPos + moon7Pos, moon7Color);
+		moon2->model = translate(moon2->model, vec3(earthRadius, 0.0f, 0.0f));
+		moon2->model = rotate(moon2->model, radians(150.0f), vec3(0.0f, 1.0f, 0.0f));
+		moon2->model = translate(moon2->model, vec3(moonRadius, 0.0f, 0.0f));
+		moon2->model = scale(moon2->model, vec3(0.25f));
+		
+		moon3->model = translate(moon3->model, vec3(earthRadius, 0.0f, 0.0f));
+		moon3->model = rotate(moon3->model, radians(270.0f), vec3(0.0f, 1.0f, 0.0f));
+		moon3->model = translate(moon3->model, vec3(moonRadius, 0.0f, 0.0f));
+		moon3->model = scale(moon3->model, vec3(0.25f));
+				
+		marsLine->model = translate(marsLine->model, vec3(marsRadius, 0.0f, 0.0f));
+		marsLine->model = rotate(marsLine->model, radians(45.0f), vec3(0, 0, 1.0f));
+		marsLine->model = scale(marsLine->model, vec3(0.5f));
+		mars->model = translate(mars->model, vec3(marsRadius, 0.0f, 0.0f));
+		mars->model = rotate(mars->model, radians(45.0f), vec3(0, 0, 1.0f));
+		mars->model = scale(mars->model, vec3(0.5f));
+		
+		
+		moon4->model = translate(moon4->model, vec3(marsRadius, 0.0f, 0.0f));
+		moon4->model = rotate(moon4->model, radians(45.0f), vec3(0, 0, 1.0f));
+		moon4->model = rotate(moon4->model, radians(0.0f), vec3(0.0f, 1.0f, 0.0f));
+		moon4->model = translate(moon4->model, vec3(moonRadius, 0, 0));
+		moon4->model = scale(moon4->model, vec3(0.1f));
+		
+		moon5->model = translate(moon5->model, vec3(marsRadius, 0.0f, 0.0f));
+		moon5->model = rotate(moon5->model, radians(45.0f), vec3(0, 0, 1.0f));
+		moon5->model = rotate(moon5->model, radians(90.0f), vec3(0.0f, 1.0f, 0.0f));
+		moon5->model = translate(moon5->model, vec3(moonRadius, 0, 0));
+		moon5->model = scale(moon5->model, vec3(0.1f));
+		
+		moon6->model = translate(moon6->model, vec3(marsRadius, 0.0f, 0.0f));
+		moon6->model = rotate(moon6->model, radians(45.0f), vec3(0, 0, 1.0f));
+		moon6->model = rotate(moon6->model, radians(180.0f), vec3(0.0f, 1.0f, 0.0f));
+		moon6->model = translate(moon6->model, vec3(moonRadius, 0, 0));
+		moon6->model = scale(moon6->model, vec3(0.1f));
+
+		moon7->model = translate(moon7->model, vec3(marsRadius, 0.0f, 0.0f));
+		moon7->model = rotate(moon7->model, radians(45.0f), vec3(0, 0, 1.0f));
+		moon7->model = rotate(moon7->model, radians(270.0f), vec3(0.0f, 1.0f, 0.0f));
+		moon7->model = translate(moon7->model, vec3(moonRadius, 0, 0));
+		moon7->model = scale(moon7->model, vec3(0.1f));
+		
 	} catch (const std::exception& e) {
 		release();
 		std::cerr << e.what() << std::endl;
@@ -262,16 +344,26 @@ bool init() {
 void render() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	
-	earth->render(view, projection);
-	earthLine->render(view, projection);
+	sun->render(view, projection);
+	sunLine->render(view, projection);
+	
 	moon1->render(view, projection);
 	moon2->render(view, projection);
+	
+	earth->render(view, projection);
+	earthLine->render(view, projection);
 	moon3->render(view, projection);
+	
+	
+	mars->render(view, projection);
+	marsLine->render(view, projection);
 	moon4->render(view, projection);
 	moon5->render(view, projection);
 	moon6->render(view, projection);
 	moon7->render(view, projection);
-
+	transformObjs();
+	
+	/*
 	float earthFactor = earthPosX;
 	earthPos = glm::vec3(-cos(earthAngle) * earthFactor, 0, -sin(earthAngle) * earthFactor);
 
@@ -332,9 +424,6 @@ void render() {
 	moon3->model = glm::translate(moon3->model, earthPos);
 	moon3->model = glm::rotate(moon3->model, glm::radians(earthRotationAxisY), glm::vec3(0.0f, 1.0f, 0.0f));
 	moon3->model = glm::scale(moon3->model, glm::vec3(moon3Size));
-
-	mars->render(view, projection);
-	marsLine->render(view, projection);
 
 	float marsFactor = marsPosX;
 	marsPos = glm::vec3(-cos(marsAngle) * marsFactor, 0, -sin(marsAngle) * marsFactor);
@@ -414,8 +503,7 @@ void render() {
 	moon7->model = glm::scale(moon7->model, glm::vec3(moon7Size));
 
 
-	sun->render(view, projection);
-	sunLine->render(view, projection);
+	
 
 	sun->model = glm::rotate(sun->model, glm::radians(-sunRotationAxisZ), glm::vec3(0.0f, 0.0f, 1.0f));
 	sun->model = glm::rotate(sun->model, glm::radians(-sunRotationAxisY), glm::vec3(0.0f, 1.0f, 0.0f));
@@ -431,6 +519,7 @@ void render() {
 
 	sunLine->model = glm::rotate(sunLine->model, glm::radians(sunRotationAxisY), glm::vec3(0.0f, 1.0f, 0.0f));
 	sunLine->model = glm::rotate(sunLine->model, glm::radians(sunRotationAxisZ), glm::vec3(0.0f, 0.0f, 1.0f));
+	*/
 }
 
 /*
@@ -452,9 +541,11 @@ void keyboard(GLFWwindow* window, unsigned int codepoint) {
 	switch (codepoint) {
 	case '+':
 		sun->model = glm::scale(sun->model, glm::vec3(1.2f));
+		sunLine->model = glm::scale(sunLine->model, glm::vec3(1.2f));
 		break;
 	case '-':
 		sun->model = glm::scale(sun->model, glm::vec3(0.8f));
+		sunLine->model = glm::scale(sunLine->model, glm::vec3(0.8f));
 		break;
 	case 'x':
 		sun->model = glm::rotate(sun->model, 0.1f, glm::normalize(glm::vec3(1.0f, 0.0f, 0.0f)));
@@ -475,6 +566,94 @@ void keyboard(GLFWwindow* window, unsigned int codepoint) {
 		sun->model = glm::rotate(sun->model, -0.1f, glm::normalize(glm::vec3(0.0f, 0.0f, 1.0f)));
 		break;
 	}
+}
+
+void transformObjs() {
+	sun->model = rotate(sun->model, radians(sunRotationSpeed), vec3(0.0f, 1.0f, 0.0f));
+	sunLine->model = rotate(sunLine->model, radians(0.1f), vec3(0.0f, 1.0f, 0.0f));
+
+	earth->model = translate(earth->model, vec3(-2.0f * earthRadius, 0.0f, 0.0f));
+	earth->model = rotate(earth->model, radians(sunRotationSpeed), vec3(0.0f, 1.0f, 0.0f));
+	earth->model = translate(earth->model, vec3(2.0f * earthRadius, 0.0f, 0.0f));
+	earthLine->model = translate(earthLine->model, vec3(-2.0f * earthRadius, 0.0f, 0.0f));
+	earthLine->model = rotate(earthLine->model, radians(sunRotationSpeed), vec3(0.0f, 1.0f, 0.0f));
+	earthLine->model = translate(earthLine->model, vec3(2.0f * earthRadius, 0.0f, 0.0f));
+
+	moon1->model = translate(moon1->model, vec3(-4.0f * moonRadius, 0.0f, 0.0f));
+	moon1->model = rotate(moon1->model, radians(-30.0f), vec3(0.0f, 1.0f, 0.0f));
+	moon1->model = translate(moon1->model, vec3(-4.0f * earthRadius, 0.0f, 0.0f));
+	moon1->model = rotate(moon1->model, radians(sunRotationSpeed), vec3(0.0f, 1.0f, 0.0f));
+	moon1->model = translate(moon1->model, vec3(4.0f * earthRadius, 0.0f, 0.0f));
+	moon1->model = rotate(moon1->model, radians(30.0f), vec3(0.0f, 1.0f, 0.0f));
+	moon1->model = translate(moon1->model, vec3(4.0f * moonRadius, 0.0f, 0.0f));
+
+	moon2->model = translate(moon2->model, vec3(-4.0f * moonRadius, 0.0f, 0.0f));
+	moon2->model = rotate(moon2->model, radians(-150.0f), vec3(0.0f, 1.0f, 0.0f));
+	moon2->model = translate(moon2->model, vec3(-4.0f * earthRadius, 0.0f, 0.0f));
+	moon2->model = rotate(moon2->model, radians(sunRotationSpeed), vec3(0.0f, 1.0f, 0.0f));
+	moon2->model = translate(moon2->model, vec3(4.0f * earthRadius, 0.0f, 0.0f));
+	moon2->model = rotate(moon2->model, radians(150.0f), vec3(0.0f, 1.0f, 0.0f));
+	moon2->model = translate(moon2->model, vec3(4.0f * moonRadius, 0.0f, 0.0f));
+
+	moon3->model = translate(moon3->model, vec3(-4.0f * moonRadius, 0.0f, 0.0f));
+	moon3->model = rotate(moon3->model, radians(-270.0f), vec3(0.0f, 1.0f, 0.0f));
+	moon3->model = translate(moon3->model, vec3(-4.0f * earthRadius, 0.0f, 0.0f));
+	moon3->model = rotate(moon3->model, radians(sunRotationSpeed), vec3(0.0f, 1.0f, 0.0f));
+	moon3->model = translate(moon3->model, vec3(4.0f * earthRadius, 0.0f, 0.0f));
+	moon3->model = rotate(moon3->model, radians(270.0f), vec3(0.0f, 1.0f, 0.0f));
+	moon3->model = translate(moon3->model, vec3(4.0f * moonRadius, 0.0f, 0.0f));
+
+	mars->model = rotate(mars->model, radians(-45.0f), vec3(0.0f, 0.0f, 1.0f));
+	mars->model = translate(mars->model, vec3(-2 * marsRadius, 0.0f, 0.0f));
+	mars->model = rotate(mars->model, radians(sunRotationSpeed), vec3(0.0f, 1.0f, 0.0f));
+	mars->model = translate(mars->model, vec3(2 * marsRadius, 0.0f, 0.0f));
+	mars->model = rotate(mars->model, radians(45.0f), vec3(0.0f, 0.0f, 1.0f));
+
+	marsLine->model = rotate(marsLine->model, radians(-45.0f), vec3(0.0f, 0.0f, 1.0f));
+	marsLine->model = translate(marsLine->model, vec3(-2 * marsRadius, 0.0f, 0.0f));
+	marsLine->model = rotate(marsLine->model, radians(sunRotationSpeed), vec3(0.0f, 1.0f, 0.0f));
+	marsLine->model = translate(marsLine->model, vec3(2 * marsRadius, 0.0f, 0.0f));
+	marsLine->model = rotate(marsLine->model, radians(45.0f), vec3(0.0f, 0.0f, 1.0f));
+
+	moon4->model = rotate(moon4->model, radians(-0.0f), vec3(0.0f, 1.0f, 0.0f));
+	moon4->model = translate(moon4->model, vec3(-10 * moonRadius, 0, 0));
+	moon4->model = rotate(moon4->model, radians(-45.0f), vec3(0, 0, 1.0f));
+	moon4->model = translate(moon4->model, vec3(-10 * marsRadius, 0.0f, 0.0f));
+	moon4->model = rotate(moon4->model, radians(sunRotationSpeed), vec3(0.0f, 1.0f, 0.0f));
+	moon4->model = translate(moon4->model, vec3(10 * marsRadius, 0.0f, 0.0f));
+	moon4->model = rotate(moon4->model, radians(45.0f), vec3(0, 0, 1.0f));
+	moon4->model = translate(moon4->model, vec3(10 * moonRadius, 0, 0));
+	moon4->model = rotate(moon4->model, radians(0.0f), vec3(0.0f, 1.0f, 0.0f));
+
+	moon5->model = rotate(moon5->model, radians(-90.0f), vec3(0.0f, 1.0f, 0.0f));
+	moon5->model = translate(moon5->model, vec3(-12 * moonRadius, 0, 0));
+	moon5->model = rotate(moon5->model, radians(-45.0f), vec3(0, 0, 1.0f));
+	moon5->model = translate(moon5->model, vec3(-12 * marsRadius, 0.0f, 0.0f));
+	moon5->model = rotate(moon5->model, radians(sunRotationSpeed), vec3(0.0f, 1.0f, 0.0f));
+	moon5->model = translate(moon5->model, vec3(12 * marsRadius, 0.0f, 0.0f));
+	moon5->model = rotate(moon5->model, radians(45.0f), vec3(0, 0, 1.0f));
+	moon5->model = translate(moon5->model, vec3(12 * moonRadius, 0, 0));
+	moon5->model = rotate(moon5->model, radians(90.0f), vec3(0.0f, 1.0f, 0.0f));
+
+	moon6->model = rotate(moon6->model, radians(-180.0f), vec3(0.0f, 1.0f, 0.0f));
+	moon6->model = translate(moon6->model, vec3(-18 * moonRadius, 0, 0));
+	moon6->model = rotate(moon6->model, radians(-45.0f), vec3(0, 0, 1.0f));
+	moon6->model = translate(moon6->model, vec3(-18 * marsRadius, 0.0f, 0.0f));
+	moon6->model = rotate(moon6->model, radians(sunRotationSpeed), vec3(0.0f, 1.0f, 0.0f));
+	moon6->model = translate(moon6->model, vec3(18 * marsRadius, 0.0f, 0.0f));
+	moon6->model = rotate(moon6->model, radians(45.0f), vec3(0, 0, 1.0f));
+	moon6->model = translate(moon6->model, vec3(18 * moonRadius, 0, 0));
+	moon6->model = rotate(moon6->model, radians(180.0f), vec3(0.0f, 1.0f, 0.0f));
+
+	moon7->model = rotate(moon7->model, radians(-270.0f), vec3(0.0f, 1.0f, 0.0f));
+	moon7->model = translate(moon7->model, vec3(-16 * moonRadius, 0, 0));
+	moon7->model = rotate(moon7->model, radians(-45.0f), vec3(0, 0, 1.0f));
+	moon7->model = translate(moon7->model, vec3(-16 * marsRadius, 0.0f, 0.0f));
+	moon7->model = rotate(moon7->model, radians(sunRotationSpeed), vec3(0.0f, 1.0f, 0.0f));
+	moon7->model = translate(moon7->model, vec3(16 * marsRadius, 0.0f, 0.0f));
+	moon7->model = rotate(moon7->model, radians(45.0f), vec3(0, 0, 1.0f));
+	moon7->model = translate(moon7->model, vec3(16 * moonRadius, 0, 0));
+	moon7->model = rotate(moon7->model, radians(270.0f), vec3(0.0f, 1.0f, 0.0f));
 }
 
 int main(int argc, char** argv) {

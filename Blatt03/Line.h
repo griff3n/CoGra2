@@ -17,12 +17,14 @@ namespace cg {
 	class Line : DrawObject {
 	public:
 		// Create a line with the given color.
-		Line(const glm::vec3& color = glm::vec3(0.9f));
+		Line(const glm::vec3& color = glm::vec3(0.9f), const GLfloat length = 500.0f);
 		void render(const glm::mat4& view, const glm::mat4& projection);
 	private:
 		void initObjectData(const glm::vec3& color);
 	public:
 		glm::mat4 model;
+	private:
+		GLfloat length;
 	};
 }
 
